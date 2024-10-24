@@ -7,5 +7,5 @@
 - Linux: GNOME keyring
 
 2- Store data in file system after encrypting it (AES encryption).
-3- use LEVELDB
-4- use Sqlite3
+3- Use LEVEL DB
+4- Use Sqlite3

@@ -29,11 +29,11 @@ func main() {
 		fmt.Println("Error saving toke in file system: ", err)
 	}
 	// Load tokens
-	d, err := filesystem.LoadTokensFromFile("./data/jwtTokens")
+	tokensFromFileSystem, err := filesystem.LoadTokensFromFile("./data/jwtTokens")
 	if err != nil {
 		fmt.Println("error reading tokens from file system: ", err)
 	}
-	fmt.Println(d.AccessToken)
+	fmt.Println("Tokens from File system: ", tokensFromFileSystem)
 	// Clear tokens
 	err = filesystem.ClearTokens("./data/jwtTokens")
 	if err != nil {
@@ -49,18 +49,18 @@ func main() {
 		fmt.Println("error saving tokens in keychain/Credential manager: ", err)
 	}
 	// Load tokens
-	tokens, err = storageAPIs.LoadTokens()
+	tokensFromPlatformSpecificAPIs, err := storageAPIs.LoadTokens()
 	if err != nil {
 		fmt.Println("error saving tokens in keychain/Credential manager: ", err)
 	}
-	fmt.Println(tokens)
+	fmt.Println("Tokens From Platform Specific APIs: ", tokensFromPlatformSpecificAPIs)
 	// Clear tokens
 	err = storageAPIs.ClearTokens()
 	if err != nil {
 		fmt.Println("error clearing tokens: ", err)
+	} else {
+		fmt.Println("Tokens cleared successfully.")
 	}
-	fmt.Println(tokens)
-
 	///////////////////////////////////////////////////////////////  LEVEL DB
 	// Open the LevelDB database
 	db, err := leveldb.OpenFile("data/db", nil)
@@ -75,15 +75,17 @@ func main() {
 	}
 
 	// Load tokens from LevelDB
-	loadedTokens, err := leveldbstorage.LoadTokensFromDB(db, "jwtTokens")
+	tokensFromLevelDb, err := leveldbstorage.LoadTokensFromDB(db, "jwtTokens")
 	if err != nil {
 		log.Fatal("Error loading tokens from LevelDB:", err)
 	}
-	fmt.Println("Loaded AccessToken:", loadedTokens.AccessToken)
+	fmt.Println("Tokens from Level DB:", tokensFromLevelDb)
 
 	// Clear tokens from LevelDB
 	err = leveldbstorage.ClearTokensFromDB(db, "jwtTokens")
 	if err != nil {
 		log.Fatal("Error clearing tokens from LevelDB:", err)
+	} else {
+		fmt.Println("Tokens cleared successfully.")
 	}
 }
