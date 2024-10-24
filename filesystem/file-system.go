@@ -7,7 +7,7 @@ import (
 	"github.com/mrkouhadi/go-storage/utils"
 )
 
-// Save encrypted tokens to file
+// SaveTokensToFile saves encrypted tokens to file
 func SaveTokensToFile(filename string, tokenData utils.TokenData) error {
 	// Serialize the token data to JSON
 	jsonData, err := json.Marshal(tokenData)
@@ -25,7 +25,7 @@ func SaveTokensToFile(filename string, tokenData utils.TokenData) error {
 	return os.WriteFile(filename, encryptedData, 0644)
 }
 
-// Load and decrypt tokens from file
+// LoadTokensFromFile loads and decrypts tokens from file
 func LoadTokensFromFile(filename string) (utils.TokenData, error) {
 	// Read the encrypted data from the file
 	encryptedData, err := os.ReadFile(filename)
@@ -47,4 +47,15 @@ func LoadTokensFromFile(filename string) (utils.TokenData, error) {
 	}
 
 	return tokenData, nil
+}
+
+// ClearTokens removes the token file from the filesystem
+func ClearTokens(filename string) error {
+	// Remove the file from the filesystem
+	err := os.Remove(filename)
+	if os.IsNotExist(err) {
+		// If the file does not exist, it's not an error
+		return nil
+	}
+	return err
 }
