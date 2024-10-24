@@ -14,8 +14,8 @@ This document outlines different methods for securely storing sensitive data on 
 
 ### 3. Use LevelDB
 
-- Store sensitive data using [LevelDB](https://github.com/google/leveldb), a fast key-value storage library.
+- Store sensitive data using [LevelDB](https://github.com/google/leveldb) after encrypting it using AES encryption.
 
 ### 4. Use SQLite3
 
-- Store data in a local SQLite3 database.
+- Store data in a local SQLite3 database after encrypting it using AES encryption.

@@ -1,12 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/mrkouhadi/go-storage/filesystem"
 	"github.com/mrkouhadi/go-storage/leveldbstorage"
+	"github.com/mrkouhadi/go-storage/sqlite3storage"
 	"github.com/mrkouhadi/go-storage/storageAPIs"
 	"github.com/mrkouhadi/go-storage/utils"
 	"github.com/syndtr/goleveldb/leveldb"
@@ -63,26 +66,60 @@ func main() {
 	}
 	///////////////////////////////////////////////////////////////  LEVEL DB
 	// Open the LevelDB database
-	db, err := leveldb.OpenFile("data/db", nil)
+	level_db, err := leveldb.OpenFile("data/level_db", nil)
 	if err != nil {
 		log.Fatal("Error opening LevelDB:", err)
 	}
-	defer db.Close()
+	defer level_db.Close()
 	// Save tokens to LevelDB
-	err = leveldbstorage.SaveTokensToDB(db, "jwtTokens", tokens)
+	err = leveldbstorage.SaveTokensToDB(level_db, "jwtTokens", tokens)
 	if err != nil {
 		log.Fatal("Error saving tokens to LevelDB:", err)
 	}
 	// Load tokens from LevelDB
-	tokensFromLevelDb, err := leveldbstorage.LoadTokensFromDB(db, "jwtTokens")
+	tokensFromLevelDb, err := leveldbstorage.LoadTokensFromDB(level_db, "jwtTokens")
 	if err != nil {
 		log.Fatal("Error loading tokens from LevelDB:", err)
 	}
 	fmt.Println("Tokens from Level DB:", tokensFromLevelDb)
 	// Clear tokens from LevelDB
-	err = leveldbstorage.ClearTokensFromDB(db, "jwtTokens")
+	err = leveldbstorage.ClearTokensFromDB(level_db, "jwtTokens")
 	if err != nil {
 		log.Fatal("Error clearing tokens from LevelDB:", err)
+	} else {
+		fmt.Println("Tokens cleared successfully.")
+	}
+	///////////////////////////////////////////////////////////////  sqlite3 DB
+	// Open the SQLite3 database (this will create the file if it doesn't exist)
+	sqlite_db, err := sql.Open("sqlite3", "data/sqlite3/tokens.db")
+	if err != nil {
+		log.Fatal("Error opening SQLite3 DB:", err)
+	}
+	defer sqlite_db.Close()
+
+	// Initialize the database
+	err = sqlite3storage.InitializeDB(sqlite_db)
+	if err != nil {
+		log.Fatal("Error initializing SQLite3 DB:", err)
+	}
+
+	// Save tokens to SQLite3
+	err = sqlite3storage.SaveTokensToDB(sqlite_db, "jwtTokens", tokens)
+	if err != nil {
+		log.Fatal("Error saving tokens to SQLite3:", err)
+	}
+
+	// Load tokens from SQLite3
+	loadedTokens, err := sqlite3storage.LoadTokensFromDB(sqlite_db, "jwtTokens")
+	if err != nil {
+		log.Fatal("Error loading tokens from SQLite3:", err)
+	}
+	fmt.Println("Tokens from sqlite3 :", loadedTokens)
+
+	// Clear tokens from SQLite3
+	err = sqlite3storage.ClearTokensFromDB(sqlite_db, "jwtTokens")
+	if err != nil {
+		log.Fatal("Error clearing tokens from SQLite3:", err)
 	} else {
 		fmt.Println("Tokens cleared successfully.")
 	}
