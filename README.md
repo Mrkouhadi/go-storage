@@ -1,11 +1,21 @@
-# ways of securely storing data in users' machines.
+# Store Sensitive Data Securely on Users' Machines
 
-1- Store data using Platform specific APIs:
+This document outlines different methods for securely storing sensitive data on users' machines.
 
-- windows: Credential manager
-- Macos: Keychain
-- Linux: GNOME keyring
+### 1. Store Data Using Platform-Specific APIs with the help of [Go-Keyring](https://github.com/zalando/go-keyring)
 
-2- Store data in file system after encrypting it (AES encryption).
-3- Use LEVEL DB
-4- Use Sqlite3
+- **Windows**: Credential Manager
+- **macOS**: Keychain
+- **Linux**: GNOME Keyring
+
+### 2. Store Data in the File System
+
+- Encrypt the data using AES encryption before storing it in the file system.
+
+### 3. Use LevelDB
+
+- Store sensitive data using [LevelDB](https://github.com/google/leveldb), a fast key-value storage library.
+
+### 4. Use SQLite3
+
+- Store data in a local SQLite3 database.

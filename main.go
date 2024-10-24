@@ -73,14 +73,12 @@ func main() {
 	if err != nil {
 		log.Fatal("Error saving tokens to LevelDB:", err)
 	}
-
 	// Load tokens from LevelDB
 	tokensFromLevelDb, err := leveldbstorage.LoadTokensFromDB(db, "jwtTokens")
 	if err != nil {
 		log.Fatal("Error loading tokens from LevelDB:", err)
 	}
 	fmt.Println("Tokens from Level DB:", tokensFromLevelDb)
-
 	// Clear tokens from LevelDB
 	err = leveldbstorage.ClearTokensFromDB(db, "jwtTokens")
 	if err != nil {
