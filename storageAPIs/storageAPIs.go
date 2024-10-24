@@ -32,14 +32,14 @@ func SaveTokens(tokenData utils.TokenData) error {
 // Load tokens from the keychain or credential manager
 func LoadTokens() (utils.TokenData, error) {
 	// Retrieve the data from the keychain or credential manager
-	encryptedData, err := keyring.Get(serviceName, tokenKey)
+	data, err := keyring.Get(serviceName, tokenKey)
 	if err != nil {
 		return utils.TokenData{}, err
 	}
 
 	// Deserialize JSON data into TokenData struct
 	var tokenData utils.TokenData
-	err = json.Unmarshal([]byte(encryptedData), &tokenData)
+	err = json.Unmarshal([]byte(data), &tokenData)
 	if err != nil {
 		return utils.TokenData{}, err
 	}
